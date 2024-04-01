@@ -15,7 +15,13 @@ class Phone(Field):
         if len(value) == 10 and value.isdigit:
             super.__init__(value)
         else:
-            raise ValueError("The phone you entered is invalid")
+            raise ValueError
+        
+    def phone_validator(self, value):
+        if len(value) == 10 and value.isdigit():
+            return value
+        else:
+            raise TypeError
 
 class Record:
     def __init__(self, name):
@@ -24,39 +30,44 @@ class Record:
 
     def add_phone(self, phone_number):
         self.phones.append(Phone(phone_number))
+        return self.phones
           
     def remove_phone(self, phone_number):
         self_phones = [phone for phone in self.phones if str(phone) != phone_number]
+        return self_phones
           
     def search_phone(self, value):
         for phone in self.phones:
-            if value in str(phone):
-                return str(phone)
-        return "There is no such phone number in database"
+            if value in phone:
+                return phone
+            else:
+                raise ValueError
           
     def edit_phone(self, old_phone, new_phone):
+        if not Phone.is_valid(new_phone):
+            raise ValueError
+        
         for phone in self.phones:
-            if str(phone) == old_phone:
-                phone.value = new_phone
-                return "Phone number edited successfully."
-        return "There is no such phone number in database"
+            if phone == old_phone:
+                phone = new_phone
+        raise ValueError
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
 
 class AddressBook(UserDict):
     def add_record(self, record):
-        self.data[record.name.value] = record 
-        return "Your record has been added successfully"
+        self.data[record.name.value] = record
+        return self.data
 
-    def find_record(self, name):
+    def find(self, name):
         if name in self.data:
             return self.data.get(name)
         else:
-            return "There is no record by your name in database"
+            raise ValueError
     
-    def remove_record(self, name):
+    def delete(self, name):
         if name in self.data:
             del self.data[name]
         else:
-            return "There is no record by your name in database"
+            raise ValueError
