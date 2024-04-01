@@ -8,65 +8,55 @@ class Field:
         return str(self.value)
 
 class Name(Field):
-     def __init__(self, value):
-        super().__init__(value)
+		pass
 
 class Phone(Field):
     def __init__(self, value):
-        super().__init__(value)
-
-    def validate(self, value):
         if len(value) == 10 and value.isdigit:
-            super().__init__(value)
+            super.__init__(value)
         else:
-            raise ValueError
-            
+            raise ValueError("The phone you entered is invalid")
+
 class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
 
-    def add_phone(self, phone):
-        if phone.validate():
-            self.phone.append(Phone(phone))
-        else:
-            print("Невірний номер телефону")
-
-    def remove_phone(self, phone):
-        if phone.validate():
-            for id, phone_record in enumerate(self.phones):
-                if phone_record == phone:
-                    self.phones.pop(id)
-        
+    def add_phone(self, phone_number):
+        self.phones.append(Phone(phone_number))
+          
+    def remove_phone(self, phone_number):
+        self_phones = [phone for phone in self.phones if str(phone) != phone_number]
+          
+    def search_phone(self, value):
+        for phone in self.phones:
+            if value in str(phone):
+                return str(phone)
+        return "There is no such phone number in database"
+          
     def edit_phone(self, old_phone, new_phone):
-        for idx, phone in enumerate(self.phones):
-            if phone.value == old_phone:
-                if Phone(new_phone).validate():
-                    self.phones[idx] = Phone(new_phone)
-                    print("Номер телефону успішно змінено.")
-                else:
-                    print("Невірний формат нового номеру телефону.")
-                return
-        print("Такого номеру телефону не існує.")
-
-    def find_phone()
-
+        for phone in self.phones:
+            if str(phone) == old_phone:
+                phone.value = new_phone
+                return "Phone number edited successfully."
+        return "There is no such phone number in database"
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
 
 class AddressBook(UserDict):
-    def __init__(self, contacts):
-        self.contacts = contacts
-
     def add_record(self, record):
-        if record in self.contacts:
-            return "Your phone is already in database"
+        self.data[record.name.value] = record 
+        return "Your record has been added successfully"
+
+    def find_record(self, name):
+        if name in self.data:
+            return self.data.get(name)
         else:
-            self.contacts.append(record)
-        
-
-    def search_by_name():
-        pass
-
-    def contact_remove():
+            return "There is no record by your name in database"
+    
+    def remove_record(self, name):
+        if name in self.data:
+            del self.data[name]
+        else:
+            return "There is no record by your name in database"
